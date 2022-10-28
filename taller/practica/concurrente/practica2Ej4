@@ -1,0 +1,128 @@
+programa ejercicio4TP2
+
+procesos
+
+  proceso juntarFlores (ES flor:numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flor:=flor+1
+  fin
+
+  proceso juntarPapeles (ES papel:numero)
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      papel:=papel+1
+  fin
+
+  proceso limpiar (ES f:numero; ES p:numero)
+  comenzar
+    juntarFlores(f)
+    juntarPapeles(p)
+  fin
+
+  proceso minimo (ES min:numero; E f:numero; E p:numero; ES act:boolean)
+  variables
+    total:numero
+  comenzar
+    total:=f+p
+    si (total<min)
+      min:=total
+      act:= True
+    sino 
+      act:=false
+    fin
+      
+
+
+areas
+  cuadrante : AreaP (25,25,75,75)
+  ciudad : AreaC (1,1,100,100)
+
+robots
+
+  robot tipo1
+  variables
+    r,m,flor,papel,rMin:numero
+    actualice:boolean
+  comenzar
+    m:=999
+    repetir 10
+      Random(r,1,4)
+      si (r = 1)
+        EnviarMensaje(1,robot1)
+        RecibirMensaje(flor,robot1)
+        RecibirMensaje(papel,robot1)
+        minimo(m,flor,papel,actualice)
+        si (actualice)
+          rMin:= r          
+      sino
+        si (r = 2)
+          EnviarMensaje (2,robot2)
+          RecibirMensaje(flor,robot2)
+          RecibirMensaje(papel,robot2)
+          minimo(m,flor,papel,actualice)
+          si (actualice)
+            rMin:=r
+        sino
+          si (r = 3)
+            EnviarMensaje (3,robot3)
+            RecibirMensaje(flor,robot3)
+            RecibirMensaje(papel,robot3)
+            minimo(m,flor,papel,actualice)
+            si (actualice)
+              rMin:=r
+          sino
+            si (r = 4)
+              EnviarMensaje (4,robot4)
+              RecibirMensaje(flor,robot4)
+              RecibirMensaje(papel,robot4)
+              minimo(m,flor,papel,actualice)
+              si (actualice)
+                rMin:=r
+    
+    
+  fin
+  
+  robot tipo2
+  variables
+    quienSoy,ca,av,nca,nav,flor,papel,m:numero
+  comenzar
+    ca:=PosCa
+    av:=PosAv
+    RecibirMensaje(quienSoy,fiscal)
+    Random(nca,25,75)
+    Random(nav,25,75)
+    Pos(nav,nca)
+    limpiar(flor,papel)
+    Pos(av,ca)
+    EnviarMensaje(flor,fiscal)
+    EnviarMensaje(papel,fiscal)
+  fin
+
+
+  
+
+variables
+
+  fiscal: tipo1
+  robot1: tipo2
+  robot2: tipo2
+  robot3: tipo2
+  robot4: tipo2
+  
+comenzar
+
+  AsignarArea(fiscal,ciudad)
+  AsignarArea(robot1,cuadrante)
+  AsignarArea(robot2,cuadrante)
+  AsignarArea(robot3,cuadrante)
+  AsignarArea(robot4,cuadrante)
+  Iniciar(fiscal,1,1)
+  Iniciar(robot1,25,1)
+  Iniciar(robot2,30,1)
+  Iniciar(robot3,35,1)
+  Iniciar(robot4,40,1)
+
+fin

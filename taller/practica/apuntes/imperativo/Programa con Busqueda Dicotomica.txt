@@ -1,0 +1,109 @@
+{Incorporar al programa de la actividad 2 de la clase anterior (Ordenación):
+
+A -Un módulo que realice una búsqueda dicotómica que determine si existe en la empresa 
+el empleado con un DNI que se ingresa por teclado.
+B-Una sentencia que realice la invocación al módulo para informar el resultado de la búsqueda.}
+
+
+program BusquedaDicotomica1;
+Uses crt;
+
+const
+  no_Encontrado= -1;
+
+type
+  rango =1..100;
+
+  vector = array [rango] of integer;
+
+
+Procedure  OrdenacionPorInsercion (var v:Vector; dimL:integer);
+var
+    i:rango; aux:Integer; J: integer;
+begin
+    for i:= 1 to dimL do begin
+        aux:=v[i];
+        J:= i-1;
+        while (J>0) and (v[J] > aux) do begin
+            v[J+1]:= v[J];
+            J:= J-1;
+        end;
+        v[J+1]:= aux;
+     end;
+end;
+
+Procedure  CargarVec (var vec: Vector;var dimL:integer);
+var
+    num:integer;
+begin
+    DimL:=0;
+    Writeln ('Ingrese el DNI, para finalizar ingrese 000 ');
+    readln (num);
+    while (num <> 000) and (DimL < 100) do begin
+        DImL := DimL + 1;
+        vec [DImL]:=num;
+        Readln (num);
+    end;
+end;
+
+Procedure InformarVector (var v : vector; dimL : integer);
+var
+  i:rango;
+begin
+  for i:=1 to DimL do
+    writeln(V[i]);
+end;
+
+Procedure busquedaDicotomica(v : Vector; ini,fin : rango; dato : integer; var pos : integer);
+var
+    medio:rango;
+begin
+    if(ini > fin ) then
+      pos:=-1
+    else begin
+      medio:= (ini + fin)  div 2;
+      if (dato = v[medio]) then
+        pos:= medio
+      else
+        if (dato < v[medio]) then
+          busquedaDicotomica(v,ini,medio-1,dato,pos)
+        else
+          busquedaDicotomica(v,medio+1,fin,dato,pos);
+    end;
+end;
+
+procedure iniciarVector(var v : Vector);
+var
+  i : integer;
+begin
+  for i := 1 to 100 do
+    v[i] := 0;
+end;
+
+var
+  v : Vector;
+  dimL : integer;
+  dato : integer;
+  pos : integer;
+begin
+  clrscr;
+  pos:=no_Encontrado;
+  iniciarVector(v);
+
+  CargarVec (v,dimL);
+
+  OrdenacionPorInsercion (v,dimL);
+
+  Writeln('vector ordenado');
+  InformarVector(v,dimL);
+
+  Write ('ingrese el valor a buscar '); readln (dato);
+  busquedaDicotomica(v,1,dimL,dato,pos);
+
+  if (pos <> no_Encontrado) then
+      Writeln ('El DNI', dato,' se encuentra en la posicion: ', pos)
+  else
+      writeln ('no se encontro el DNI ', dato, ' en el vector');
+
+  readln();
+end.

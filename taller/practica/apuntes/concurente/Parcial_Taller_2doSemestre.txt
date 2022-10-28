@@ -1,0 +1,149 @@
+programa parcialPrimeraFecha
+
+procesos
+  proceso juntarF (ES flores: numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flores:= flores + 1
+  fin
+  
+  proceso juntarP (ES papeles: numero)
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      papeles:= papeles + 1
+  fin
+  
+areas
+  area1: AreaP(2,4,12,24)
+  area2: AreaP(16,4,26,24)
+  area3: AreaP(1,1,1,1)
+
+robots
+  robot A1
+  variables
+    id, cantidad: numero
+  comenzar
+    id:= 1
+    cantidad:= 0
+    derecha
+    repetir 4
+      juntarF(cantidad) 
+      mover
+    BloquearEsquina(7,8)
+    repetir 6
+      juntarF(cantidad) 
+      mover 
+    LiberarEsquina(7,8)
+    EnviarMensaje(1, robotF)
+    EnviarMensaje(cantidad, robotF)
+  fin
+      
+  robot A2
+  variables
+    id, cantidad: numero
+  comenzar
+    id:= 2
+    repetir 3
+      juntarP(cantidad)
+      mover
+    BloquearEsquina(7,8)
+    repetir 17
+      juntarP(cantidad)
+      mover
+    LiberarEsquina(7,8)
+    EnviarMensaje(2, robotF)
+    EnviarMensaje(cantidad, robotF)
+  fin
+  
+  robot B1
+  variables
+    id, cantidad: numero
+  comenzar
+    id:= 3
+    cantidad:= 0
+    derecha
+    repetir 4
+      juntarF(cantidad) 
+      mover 
+    BloquearEsquina(21,8)
+    repetir 6
+      juntarF(cantidad) 
+      mover 
+    LiberarEsquina(21,8)
+    EnviarMensaje(3, robotF)
+    EnviarMensaje(cantidad, robotF)
+  fin
+      
+  robot B2
+  variables
+    id, cantidad: numero
+  comenzar
+    id:= 4
+    repetir 3
+      juntarP(cantidad)
+      mover
+    BloquearEsquina(21,8)
+    repetir 17
+      juntarP(cantidad)
+      mover
+    LiberarEsquina(21,8)
+    EnviarMensaje(4, robotF)
+    EnviarMensaje(cantidad, robotF)
+  fin
+  
+  robot fiscal
+  variables
+    cantidad, id, gana, max: numero
+  comenzar
+    max := -1
+    gana := 0
+    repetir 4
+      RecibirMensaje(id,*)
+      si id = 1
+        RecibirMensaje(cantidad,robotA1)
+        si (cantidad > max)
+          max := cantidad
+          gana := id
+      sino
+        si id = 2
+          RecibirMensaje(cantidad,robotA2)
+          si (cantidad > max)
+            max := cantidad
+            gana := id
+        sino
+          si id = 3 
+            RecibirMensaje(cantidad,robotB1)
+            si (cantidad > max)
+              max := cantidad
+              gana := id
+          sino
+            si id = 4
+              RecibirMensaje(cantidad,robotB2)
+              si (cantidad > max)
+                max := cantidad
+                gana := id
+            
+    Informar('ganador',gana)
+      
+  fin
+
+variables
+  robotA1: A1
+  robotA2: A2
+  robotB1: B1
+  robotB2: B2
+  robotF: fiscal
+comenzar
+  AsignarArea(robotA1, area1)
+  AsignarArea(robotA2, area1)
+  AsignarArea(robotB1, area2)
+  AsignarArea(robotB2, area2)
+  AsignarArea(robotF, area3)
+  Iniciar(robotA1, 2,8)
+  Iniciar(robotA2, 7,4)
+  Iniciar(robotB1, 16,8)
+  Iniciar(robotB2, 21,4)
+  Iniciar(robotF, 1,1)
+fin

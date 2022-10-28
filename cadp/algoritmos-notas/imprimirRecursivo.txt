@@ -1,0 +1,9 @@
+procedure imprimirRecursivo(l:lista);
+
+begin
+if (l<>nil) then
+	begin
+	writeln('Datos: ', l^.cant);
+	imprimirRecursivo(l^.sig);
+	end;
+end;

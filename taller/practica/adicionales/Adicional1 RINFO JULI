@@ -1,0 +1,121 @@
+programa adicional1
+
+procesos
+  proceso juntarFlores
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+  fin
+  
+  proceso juntarPapel
+  comenzar
+    si HayPapelEnLaEsquina
+      tomarPapel
+  fin
+  
+  proceso depositar
+  comenzar
+    si HayPapelEnLaBolsa
+      depositarPapel
+  fin
+
+  proceso sortearEsquina (E eq: numero; ES av:numero; ES ca: numero)
+  variables
+    num: numero
+  comenzar
+    si eq=1
+      Random(num, 2,12)
+    sino
+      Random(num, 14,24)
+    av:=num
+    Random(num, 2,12)
+    ca:=num
+  fin
+      
+areas
+  fuente: AreaPC(13,13,13,13)
+  casaJefe: AreaP(1,1,1,1)
+  zona1: AreaPC(2,2,12,12)
+  casaR1: AreaP(2,1,2,1)
+  casaD1: AreaP(3,1,3,1)
+  zona2: AreaPC(14,2,24,12)
+  casaR2: AreaP(14,1,14,1)
+  casaD2: AreaP(15,1,15,1)
+  
+robots
+  robot recolector
+  variables
+    eq, avOr, caOr, av, ca: numero
+  comenzar
+    RecibirMensaje(eq, jefe)
+    avOr:=PosAv
+    caOr:=PosCa
+    repetir 3
+      sortearEsquina(eq, av, ca)
+      Pos(av,ca)
+      juntarFlores
+      Pos(avOr, caOr)
+    EnviarMensaje(eq, jefe)
+  fin
+  
+  robot depositador
+  variables
+    eq, avOr, caOr, av, ca: numero
+  comenzar
+    avOr:=PosAv
+    caOr:=PosCa
+    RecibirMensaje(eq, jefe)
+    repetir 5
+      sortearEsquina(eq, av, ca)
+      BloquearEsquina(13,13)
+      Pos(13,13)
+      juntarPapel
+      Pos(av, ca)
+      LiberarEsquina(13,13)
+      depositar
+      Pos(avOr, caOr)
+    EnviarMensaje(eq, jefe)
+  fin
+    
+  
+  robot robotJefe
+  variables
+    eq, primero: numero
+  comenzar
+    EnviarMensaje(1, robotR1)
+    EnviarMensaje(2, robotR2)
+    repetir 2
+      RecibirMensaje(eq, *)
+      si eq=1
+        EnviarMensaje(eq, robotD1)
+      sino
+        EnviarMensaje(eq, robotD2)
+    RecibirMensaje(primero, *)
+    RecibirMensaje(eq, *)
+    Informar(primero)
+    
+  fin
+    
+variables
+  robotR1, robotR2: recolector
+  robotD1, robotD2: depositador
+  jefe: robotJefe
+  
+comenzar
+  AsignarArea(robotR1, casaR1)
+  AsignarArea(robotD1, casaD1)
+  AsignarArea(robotR1, zona1)
+  AsignarArea(robotD1, zona1)
+  AsignarArea(robotR2, casaR2)
+  AsignarArea(robotD2, casaD2)
+  AsignarArea(robotR2, zona2)
+  AsignarArea(robotD2, zona2)
+  AsignarArea(robotD1, fuente)
+  AsignarArea(robotD2, fuente)
+  AsignarArea(jefe, casaJefe)
+  Iniciar(jefe,1,1)
+  Iniciar(robotR1, 2,1)
+  Iniciar(robotD1, 3,1)
+  Iniciar(robotR2, 14,1)
+  Iniciar(robotD2, 15,1)
+fin

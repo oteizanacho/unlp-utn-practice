@@ -1,0 +1,34 @@
+cadena25=string[25];
+
+var min:cadena25;
+
+
+procedure minimo (var todos:Estantes; var min:cadena25);
+var
+i,indiceMin:integer;
+
+begin
+min:='ZZZ';
+for i:=1 to cantEstantes do 
+	begin
+	if (todos[i]<>nil) then
+		if (todos[i]^.dato<=min) then 	//si pregunto con menor igual, al haber repetido me quedo con el ultimo, si pregunto por menor estricto me quedo con el primero
+			begin
+			indiceMin:=i;
+			min:=todos[indiceMin]^.dato;
+			end;
+	end;
+if (min<>'ZZZ') then
+	todos[indiceMin]:=todos[indiceMin]^.sig;
+end;
+
+
+deberia usar un registro para mandarle los datos al minimo, la lista tendria un dato de tipo registro, y consultaria: todos[i]^.dato.titulo;
+
+todo modulo q necesite para su funcionamiento de otro modulo, que nadie mas del programa principal lo usa, lo meto adentro del primer modulo
+
+
+
+
+
+

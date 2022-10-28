@@ -1,0 +1,241 @@
+programa Pr3Ej6
+procesos
+  proceso EsqF (ES f:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:=f + 1
+  fin
+  proceso EsqP (ES P:numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      P:=P + 1
+  fin
+  proceso EsqFyP (ES fp:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      fp:=fp + 1 
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      fp:=fp + 1 
+  fin
+
+
+areas
+  area1: AreaC(2,2,16,16)
+  area2: AreaPC(1,20,100,20)
+  area3: AreaPC(1,21,100,21)
+  area4: AreaPC(1,22,100,22)
+  areaJ: AreaP(1,1,1,1)
+robots
+  robot tipo1
+  variables
+    Av,Ca,id,total,move: numero
+  comenzar
+    total:=0
+    RecibirMensaje(id,jefe){quién es?}
+    repetir 6 {lado vertical izquierdo}
+      EsqF(total)
+      mover
+    derecha
+    repetir 2 {lado horizontal superior}
+      EsqF(total)
+      mover
+    BloquearEsquina(5,8)
+    repetir 2
+      EsqF(total)
+      mover
+    LiberarEsquina(5,8)
+    repetir 2
+      EsqF(total)
+      mover
+    derecha{lado vertical derecho}
+    repetir 2 
+      EsqF(total)
+      mover
+    BloquearEsquina(8,5)
+    repetir 2
+      EsqF(total)
+      mover
+    LiberarEsquina(8,5)
+    repetir 2
+      EsqF(total)
+      mover
+    derecha{lado horizontal inferior}
+    repetir 6
+      EsqF(total)
+      mover
+    repetir 2 
+      derecha
+    EnviarMensaje(id,jefe)
+    RecibirMensaje(Ca,jefe)
+    Pos(1,Ca)
+    mientras((total <> 0) & (PosCa < 100))
+      depositarFlor
+      total:=total - 1
+      mover 
+  fin  
+  robot tipo2
+  variables
+    Av,Ca,id,total,move: numero
+  comenzar
+    total:=0
+    RecibirMensaje(id,jefe){quién es?}
+    repetir 2              {lado vertical izquierdo}
+      EsqFyP(total)
+      mover
+    BloquearEsquina(5,8)
+    repetir 2
+      EsqFyP(total)
+      mover
+    LiberarEsquina(5,8)
+    repetir 6
+      EsqFyP(total)
+      mover
+    derecha
+    repetir 3 {lado horizontal superior}
+      EsqFyP(total)
+      mover
+    BloquearEsquina(9,15)
+    repetir 2
+      EsqFyP(total)
+      mover
+    LiberarEsquina(9,15)
+    repetir 5
+      EsqFyP(total)
+      mover
+    derecha{lado vertical derecho}
+    repetir 3 
+      EsqFyP(total)
+      mover
+    BloquearEsquina(15,9)
+    repetir 2
+      EsqFyP(total)
+      mover
+    LiberarEsquina(15,9)
+    repetir 5
+      EsqFyP(total)
+      mover
+    derecha{lado horizontal inferior}
+    repetir 6
+      EsqFyP(total)
+      mover
+    BloquearEsquina(8,5)
+    repetir 2
+      EsqFyP(total)
+      mover
+    LiberarEsquina(8,5)
+    repetir 2
+      EsqFyP(total)
+      mover
+    repetir 2 
+      derecha
+    EnviarMensaje(id,jefe)
+    RecibirMensaje(Ca,jefe)
+    Pos(1,Ca)
+    mientras((total <> 0) & (PosCa < 100))
+      si HayFlorEnLaBolsa
+        depositarFlor
+        total:=total - 1
+      si HayPapelEnLaBolsa
+        depositarPapel
+        total:=total - 1
+      mover 
+  fin 
+  
+  robot tipo3
+  variables
+    Av,Ca,id,total,move: numero
+  comenzar
+    total:=0
+    RecibirMensaje(id,jefe){quién es?}
+    repetir 5{lado vertical izquierdo}
+      EsqP(total)
+      mover
+    BloquearEsquina(9,15)
+    repetir 2 
+      EsqP(total)
+      mover
+    LiberarEsquina(9,15)
+    derecha
+    repetir 7 {lado horizontal superior}
+      EsqP(total)
+      mover
+    derecha{lado vertical derecho}
+    repetir 7 
+      EsqP(total)
+      mover
+    derecha{lado horizontal inferior}
+    BloquearEsquina(15,9)
+    repetir 2
+      EsqP(total)
+      mover
+    LiberarEsquina(15,9)
+    repetir 5
+      EsqP(total)
+      mover
+    repetir 2 
+      derecha
+    EnviarMensaje(id,jefe)
+    RecibirMensaje(Ca,jefe)
+    Pos(1,Ca)
+    mientras((total <> 0) & (PosCa < 100))
+      depositarPapel
+      total:=total - 1
+      mover 
+  fin
+  
+  robot Jefe
+  variables
+    Id, calle: numero
+  comenzar
+    calle:= 20
+    EnviarMensaje(1, r1)
+    EnviarMensaje(2, r2)
+    EnviarMensaje(3, r3)
+    repetir 3
+      RecibirMensaje(Id,*)
+      si (Id=1)
+        EnviarMensaje(calle, r1)
+      sino
+        si (Id=2)
+          EnviarMensaje(calle, r2)
+        sino
+          si (Id=3)
+            EnviarMensaje(calle, r3)
+      calle := calle + 1
+  fin
+variables
+  r1: tipo1
+  r2: tipo2
+  r3: tipo3
+  jefe: Jefe
+
+comenzar
+  AsignarArea(r1,area1)
+  AsignarArea(r2,area1)
+  AsignarArea(r3,area1)
+
+  AsignarArea(r1,area2)
+  AsignarArea(r2,area2)
+  AsignarArea(r3,area2)
+
+  AsignarArea(r1,area3)
+  AsignarArea(r2,area3)
+  AsignarArea(r3,area3)
+
+  AsignarArea(r1,area4)
+  AsignarArea(r2,area4)
+  AsignarArea(r3,area4)
+
+  AsignarArea(jefe,areaJ)
+
+  Iniciar(jefe,1,1)
+  Iniciar(r1,2,2)
+  Iniciar(r2,5,5)
+  Iniciar(r3,9,9)
+
+
+fin 

@@ -1,0 +1,133 @@
+programa examen
+procesos
+  proceso identificar
+  comenzar
+    EnviarMensaje(1, robotA1)
+    EnviarMensaje(1, robotA2)
+    EnviarMensaje(2, robotB1)
+    EnviarMensaje(2, robotB2)
+  fin
+  proceso envioCoordenadas
+  comenzar
+    EnviarMensaje(7, robotA1)
+    EnviarMensaje(6, robotA1)
+    EnviarMensaje(7, robotA2)
+    EnviarMensaje(6, robotA2)
+    EnviarMensaje(21, robotB1)
+    EnviarMensaje(6, robotB1)
+    EnviarMensaje(21, robotB2)
+    EnviarMensaje(6, robotB2)
+  fin
+  proceso juntarFlor (ES f: numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      f:= f +1
+  fin
+  proceso juntarPapeles(ES p: numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      p:= p +1
+  fin
+  proceso iniciof (ES f: numero)
+  comenzar
+    derecha
+    repetir 3
+      juntarFlor(f)
+      mover
+  fin
+  proceso terminarf (ES f: numero)
+  comenzar
+    repetir 4
+      juntarFlor(f)
+      mover
+  fin
+  proceso iniciop (ES p: numero)
+  comenzar
+    juntarPapeles(p)
+    mover
+  fin
+  proceso terminarp (ES p: numero)
+  comenzar
+    repetir 16
+      juntarPapeles(p)
+      mover
+    juntarPapeles(p)
+  fin
+areas
+  jefe: AreaP(1,1,1,1)
+  equipoA: AreaPC(3,4,13,24)
+  equipoB: AreaPC(17,4,27,24)
+robots
+  robot florero
+  variables
+    f,id,bav,bca:numero
+  comenzar
+    f:= 0
+    RecibirMensaje(id,robotJ)
+    iniciof(f)
+    RecibirMensaje(bav,robotJ)
+    RecibirMensaje(bca,robotJ)
+    BloquearEsquina(bav,bca)
+    mover
+    juntarFlor(f)
+    mover
+    LiberarEsquina(bav,bca)
+    terminarf(f)
+    EnviarMensaje(id,robotJ)
+  fin
+  robot papelero
+  variables
+    p,bav,bca,id: numero
+  comenzar
+    p:= 0
+    RecibirMensaje(id,robotJ)
+    iniciop(p)
+    RecibirMensaje(bav,robotJ)
+    RecibirMensaje(bca,robotJ)
+    BloquearEsquina(bav,bca)
+    mover
+    juntarPapeles(p)
+    mover
+    LiberarEsquina(bav,bca)
+    terminarp(p)
+    EnviarMensaje(id,robotJ)
+  fin
+
+  robot jefe
+  variables
+    id, cant1, cant2,ganador: numero
+  comenzar
+    cant1:=0
+    cant2:=0
+    identificar
+    envioCoordenadas
+    repetir 3
+      RecibirMensaje(id, *)
+      si(id = 1)
+        cant1:= cant1 + 1
+      sino
+        cant2:= cant2 + 1
+    si(cant1 = 2)
+      Informar('El_equipo_ganador_es_el_azul',1)
+    sino
+      Informar('El_equipo_ganador_es_el_verde',2)
+    RecibirMensaje(id, *)
+  fin
+variables
+  robotA1,robotB1:florero 
+  robotA2,robotB2: papelero
+  robotJ: jefe
+comenzar
+  AsignarArea(robotJ,jefe)
+  AsignarArea(robotA1,equipoA)
+  AsignarArea(robotA2,equipoA)
+  AsignarArea(robotB1,equipoB)
+  AsignarArea(robotB2,equipoB)
+  Iniciar(robotJ,1,1)
+  Iniciar(robotA1,3,6)
+  Iniciar(robotA2,7,4)
+  Iniciar(robotB1,17,6)
+  Iniciar(robotB2,21,4)
+fin

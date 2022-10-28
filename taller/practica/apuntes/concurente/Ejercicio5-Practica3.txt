@@ -1,0 +1,91 @@
+programa ej5-P3
+procesos
+
+  proceso juntarPapeles(ES P : numero)
+  comenzar
+    si HayPapelEnLaEsquina
+      tomarPapel
+  fin
+
+areas
+  pista1 : AreaC(1,1,100,100)
+robots
+  robot papelero
+  variables
+    p, av, ca, ok, id : numero
+  comenzar
+    p := 0
+    av := PosAv
+    ca := PosCa
+    ok := 1
+    RecibirMensaje(id,fiscal)
+    EnviarMensaje(id,fiscal)
+    mientras (PosCa < 10) & (ok = 1)
+      BloquearEsquina(10,10)
+      Pos(10,10)
+      juntarPapeles(p)
+      Pos(av,ca)
+      ca := ca + 1
+      LiberarEsquina(10,10)
+      si (HayPapelEnLaBolsa) & (ca < 10)
+        depositarPapel
+        mover
+      sino
+        EnviarMensaje(ca,fiscal)
+        ok := 0
+  fin
+  
+  robot robot5
+  variables
+    v, ca, id, gana:numero
+  comenzar
+    v:=0
+    EnviarMensaje(1,jugador1)
+    EnviarMensaje(2,jugador2)
+    EnviarMensaje(3,jugador3)
+    EnviarMensaje(4,jugador4)
+    repetir 4
+      RecibirMensaje(id,*)
+      si id = 1
+        RecibirMensaje(ca,jugador1)
+        si(ca > v)
+          v := ca
+          gana := id
+      sino
+        si id = 2
+          RecibirMensaje(ca,jugador2)
+          si(ca > v)
+            v := ca
+            gana := id
+        sino
+          si id = 3
+            RecibirMensaje(ca,jugador3)
+            si(ca > v)
+              v := ca
+              gana := id
+          sino
+            RecibirMensaje(ca,jugador4)
+            si(ca > v)
+              v := ca
+              gana := id
+    Informar('Ganador ',gana)
+  fin
+  
+variables
+  jugador1 : papelero
+  jugador2 : papelero
+  jugador3 : papelero
+  jugador4 : papelero
+  fiscal : robot5
+comenzar
+  AsignarArea(jugador1, pista1)
+  AsignarArea(jugador2, pista1)
+  AsignarArea(jugador3, pista1)
+  AsignarArea(jugador4, pista1)
+  AsignarArea(fiscal, pista1)
+  Iniciar(jugador1, 4,1)
+  Iniciar(jugador2, 6,1)
+  Iniciar(jugador3, 8,1)
+  Iniciar(jugador4, 10,1)
+  Iniciar(fiscal, 2,1)
+fin

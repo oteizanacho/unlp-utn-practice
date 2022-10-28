@@ -1,0 +1,66 @@
+programa ejercicio1TP2
+
+procesos
+
+  proceso juntarFlores (ES flor:numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flor:=flor+1
+  fin
+
+  proceso juntarPapeles (ES papel:numero)
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      papel:=papel+1
+  fin
+
+  proceso recorrido (ES flores:numero; ES papeles:numero)
+  comenzar
+    repetir 9
+      mover
+      
+  fin
+
+areas
+  ciudad : AreaC (1,1,100,100)
+
+robots
+
+  robot tipo1
+  variables
+    f:numero
+  comenzar
+    f:=0
+  fin
+  
+  robot tipo2
+  variables
+    p:numero
+  comenzar
+    p:=0
+  fin
+
+
+  
+
+variables
+
+  robotA1: tipo1
+  robotA2: tipo1
+  robotB1: tipo2
+  robotB2: tipo2
+  
+comenzar
+
+  AsignarArea(robotA1,ciudad)
+  AsignarArea(robotA2,ciudad)
+  AsignarArea(robotB1,ciudad)
+  AsignarArea(robotB2,ciudad)
+  Iniciar(robotA1,1,1)
+  Iniciar(robotA,1,1)
+  Iniciar(robotB1,5,1)
+  Iniciar(robotB2,5,1)
+
+fin

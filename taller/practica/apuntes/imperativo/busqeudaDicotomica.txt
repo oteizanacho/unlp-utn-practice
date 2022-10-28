@@ -1,0 +1,17 @@
+Procedure busquedaDicotomica( v : Vector; ini,fin : indice; dato : integer; var pos : integer);
+var
+    medio : indice;
+begin
+    if (ini > fin ) then
+         pos := -1
+    else begin
+       medio := (ini+ fin)  div 2;
+       if (dato = v[medio]) then
+            pos := medio
+       else
+         if(dato < v[medio]) then
+              busquedaDicotomica(v,ini,medio-1,dato,pos)
+         else
+              busquedaDicotomica(v,medio+1,fin,dato,pos);
+    end;
+end;

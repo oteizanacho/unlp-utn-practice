@@ -1,0 +1,244 @@
+programa ejercicio6
+procesos
+  proceso girar
+  comenzar
+    repetir 2
+      derecha
+  fin
+  proceso juntarF (ES f:numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      f:=f+1
+  fin
+  proceso juntarP (ES p:numero)
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      p:=p+1
+  fin
+areas
+  areaT: AreaPC(2,2,17,17)
+  comienzo: AreaPC (1, 20, 100, 22)
+  casaJefe: AreaP (1,1,1,1)
+robots
+  robot florero
+  variables
+    id: numero
+    calle:numero
+    f:numero
+  comenzar
+    calle:=0
+    f:=0
+    RecibirMensaje (id,jefe)
+    repetir 6
+      mover
+      juntarF (f)
+    derecha
+    repetir 2
+      mover
+      juntarF (f)
+    BloquearEsquina (5,8)
+    repetir 2
+      mover
+      juntarF (f)
+    LiberarEsquina (5,8)
+    repetir 2
+      mover
+      juntarF (f)
+    derecha
+    repetir 2 
+      mover
+      juntarF (f)
+    BloquearEsquina (8,5)
+    repetir 2
+      mover
+      juntarF (f)
+    LiberarEsquina (8,5)
+    repetir 2
+      mover
+      juntarF (f)
+    derecha
+    repetir 6
+      mover
+      juntarF (f)
+    EnviarMensaje (id, jefe)
+    RecibirMensaje (calle, jefe)
+    Pos (1, calle)
+    girar
+    mientras ((f <> 0) & (PosAv < 100))
+      depositarFlor
+      f:=f -1
+      mover
+    
+  fin
+  robot papelero
+  variables
+    id:numero
+    calle:numero
+    p:numero
+  comenzar
+    calle:=0
+    p:=0
+    RecibirMensaje (id, jefe)
+    repetir 6
+      mover
+      juntarP (p)
+    BloquearEsquina (9,15)
+    mover
+    juntarP (p)
+    LiberarEsquina (9,15)
+    derecha
+    repetir 7 
+      mover
+      juntarP (p)
+    derecha
+    repetir 7
+      mover
+      juntarP (p)
+    derecha
+    BloquearEsquina (15,9)
+    repetir 2
+      mover
+      juntarP (p)
+    LiberarEsquina (15,9)
+    repetir 5
+      mover
+      juntarP (p)
+    EnviarMensaje (id, jefe)
+    RecibirMensaje (calle, jefe)
+    Pos (1,calle)
+    girar
+    mientras ((p <> 0)&  (PosAv < 100))
+      depositarPapel
+      p:=p -1
+      mover 
+  fin
+  robot ambos
+  variables
+    id:numero
+    calle:numero
+    f:numero
+    p:numero
+    total:numero
+  comenzar 
+    calle:=0
+    f:=0
+    p:=0
+    total:=0
+    RecibirMensaje (id, jefe)
+    repetir 2
+      mover
+      juntarP (p)
+      juntarF (f)
+    BloquearEsquina (5,8)
+    repetir 2
+      mover
+      juntarP (p)
+      juntarF (f)
+      LiberarEsquina (5,8)
+    repetir 6
+      mover
+      juntarP (p)
+      juntarF (f)
+    derecha
+    repetir 3
+      mover
+      juntarP (p)
+      juntarF (f)
+    BloquearEsquina (9,15)
+    repetir 2
+      mover
+      juntarP (p)
+      juntarF (f)
+    LiberarEsquina(9,15)
+    repetir 5
+      mover
+      juntarP (p)
+      juntarF (f)
+    derecha
+    repetir 6
+      mover
+      juntarP (p)
+      juntarF (f)
+    BloquearEsquina (15,9)
+    repetir 2
+      mover
+      juntarP (p)
+      juntarF (f)
+    LiberarEsquina (15,9)
+    repetir 2
+      mover
+      juntarP (p)
+      juntarF (f)
+    derecha
+    repetir 6
+      mover
+      juntarP (p)
+      juntarF (f)
+    BloquearEsquina (8,5)
+    repetir 2
+      mover
+      juntarP (p)
+      juntarF (f)
+    LiberarEsquina (8,5)
+    repetir 2
+      mover
+      juntarP (p)
+      juntarF (f)
+    EnviarMensaje (id, jefe)
+    RecibirMensaje (calle, jefe)
+    Pos(1, calle)
+    girar
+    total:=p + f
+    mientras ((total <> 0) & (PosAv < 100))
+      si (HayPapelEnLaBolsa)
+        depositarPapel
+        total:=total -1
+      si (HayFlorEnLaBolsa)
+        depositarFlor
+        total:=total -1
+      mover
+      
+  fin
+  robot jefe
+  variables
+    id:numero   
+    calle:numero
+  comenzar
+    calle:=20
+    EnviarMensaje (1, papelero)
+    EnviarMensaje (2, florero)
+    EnviarMensaje (3, ambos)
+    repetir 3
+      RecibirMensaje (id, *)
+      si (id =1)
+        EnviarMensaje (calle,papelero)
+      sino
+        si (id=2)
+          EnviarMensaje (calle,florero)
+        sino
+          EnviarMensaje (calle,ambos)
+      calle:= calle + 1
+    
+  fin
+variables 
+  papelero: papelero
+  florero: florero
+  jefe: jefe
+  ambos: ambos
+comenzar 
+  AsignarArea(papelero, areaT) 
+  AsignarArea(florero, areaT)    
+  AsignarArea(ambos, areaT) 
+  
+  AsignarArea(papelero, comienzo) 
+  AsignarArea(florero, comienzo)    
+  AsignarArea(ambos, comienzo) 
+  AsignarArea(jefe, casaJefe)
+  Iniciar(papelero, 9, 9)
+  Iniciar(florero, 2, 2)  
+  Iniciar(ambos, 5, 5)
+  Iniciar(jefe, 1, 1)
+
+fin  

@@ -1,0 +1,116 @@
+program ventasParcial;
+const
+	CANT_MAX_VENTAS = 180;
+	MAX = 5;
+type
+	tVenta = record
+		codProd: integer;
+		cantVendida: integer;
+		montoTotal: integer;
+	end;
+	vectorDatos = array [1..CANT_MAX_VENTAS] of tVenta;
+	
+	datosSucursal = record //en realidad es un record porque necesito dimL para cada uno
+		datos: vectorDatos;
+		dimL: integer;
+	end;
+	
+	datosSucursales = array [1..5] of datosSucursal//"arreglo de arreglos";
+	
+	totalPorProducto = record
+		monto: integer;
+		codProd: integer;
+	end;
+	
+	listaMerge = ^nodo;
+	nodo = record;
+		dato: totalPorProducto;
+		sig: listaMerge;
+	end;
+	
+	arreglito = array [1..MAX] of integer;
+	
+procedure LeerVenta(var v:tVenta);
+begin
+	writeln('Se carga el codigo automaticamente');
+	v.codProd := random(500) - 1;
+	if (v.codProd <> -1) then begin
+		writeln('Se carga la cantidad vendida automaticamente y el monto');
+		v.cantVendida := random(50);
+		v.montoTotal := random(5000); //lo hice integer para poder hacer random
+	end;
+end;
+	
+procedure LeerVentas(var datosDeSucursal: datosSucursal);
+var
+	v: tVenta;
+begin
+	LeerVenta(v);
+	while (v.codProd <> -1) and (datosDeSucursal.dimL < CANT_MAX_VENTAS) do begin
+		datosDeSucursal.dimL := datosDeSucursal.dimL + 1;
+		datosDeSucursal.datos[datosDeSucursal.dimL] := v;
+		LeerVenta(v);
+	end;
+end;
+	
+procedure generarDatosSucursales(var datos: datosSucursales);
+var
+	i: integer;
+begin
+	for i:=1 to 5 do begin
+		datos[i].dimL := 0;
+		LeerVentas(datos[i]);
+	end;
+end;
+
+procedure determinarMinimo(var arregloDeSucursales: datosSucursales; var ventaMin: tVenta;var posicionActual: arreglito); //todos va por referencia, sino no termina nunca
+var
+  i: subrango;
+  indiceMin: integer;
+begin
+  
+  ventaMin.codProd := 999;
+  
+  
+  for i:= 1 to MAX do begin
+	if(posicionActual[i] <= arregloDeSucursales[i].dimL)then begin
+		if(arregloDeSucursales[i].datos[posicionActual[i]].codProd < ventaMin.codProd)then begin
+				ventaMin:= arregloDeSucursales[i].datos[posicionActual[i]]; 
+				indiceMin:= i;
+		end;
+	end;
+  end;
+  
+  if(ventaMin.codProd <> 999)then
+	posicionActual[indiceMin] := posicionActual[indiceMin] + 1;
+	
+end;
+
+procedure merge(var nuevaL: listaMerge; arregloDeSucursales: datosSucursales); 
+var
+  i: integer;
+  ventaMin: tVenta; 
+  datoTotal: totalPorProducto; 
+  ult: listaMerge;
+  posicionActual: arreglito;
+begin
+  for i:=1 to 5 do begin
+	posicionActual[i] := 1;
+  end;
+  nuevaL := nil;
+  determinarMinimo(arregloDeSucursales, ventaMin,posicionActual);
+  
+  while (ventaMin.codProd <> 999 ) do begin  
+	
+	datoTotal.codProd := ventaMin.codProd;  
+	datoTotal.monto := 0;
+	
+	while (ventaMin.codProd <> 999 )and (datoTotal.codProd = ventaMin.codProd) do begin // corte de control por nombre de localidad
+		datoTotal.monto:= datoTotal.monto + ventaMin.montoTotal; 
+		determinarMinimo(arregloDeSucursales, ventaMin, posicionActual);
+    end;
+    AgregarAtras(nuevaL, ult, datoTotal); //agrego el total de la localidad que terminé de procesar
+  end;
+end;
+		
+		
